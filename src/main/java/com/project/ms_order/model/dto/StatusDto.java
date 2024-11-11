@@ -1,6 +1,6 @@
-package com.project.ms_order.dto;
+package com.project.ms_order.model.dto;
 
-import com.project.ms_order.model.Status;
+import com.project.ms_order.model.enums.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

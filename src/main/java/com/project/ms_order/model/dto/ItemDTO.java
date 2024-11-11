@@ -1,4 +1,4 @@
-package com.project.ms_order.dto;
+package com.project.ms_order.model.dto;
 
 import lombok.*;
 

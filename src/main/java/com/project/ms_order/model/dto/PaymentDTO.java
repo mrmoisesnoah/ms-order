@@ -1,4 +1,4 @@
-package com.project.ms_order.dto;
+package com.project.ms_order.model.dto;
 
 
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-import com.project.ms_order.model.StatusPayment;
+import com.project.ms_order.model.enums.StatusPayment;
 
 @Getter
 @Setter

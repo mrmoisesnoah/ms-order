@@ -1,4 +1,4 @@
-package com.project.ms_order.model;
+package com.project.ms_order.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.project.ms_order.dto.ItemDTO;
-import com.project.ms_order.dto.OrderDTO;
+import com.project.ms_order.model.dto.OrderDTO;
+import com.project.ms_order.model.enums.Status;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

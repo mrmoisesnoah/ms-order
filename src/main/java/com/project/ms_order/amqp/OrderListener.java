@@ -7,11 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.ms_order.dto.OrderDTO;
-import com.project.ms_order.dto.PaymentDTO;
+import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.service.OrderProcessor;
-import com.project.ms_order.service.OrderService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
