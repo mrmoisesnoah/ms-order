@@ -1,4 +1,4 @@
-package com.project.ms_order.model;
+package com.project.ms_order.model.enums;
 
 public enum Status {
     PLACED,

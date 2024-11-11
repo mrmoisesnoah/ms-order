@@ -1,9 +1,9 @@
 package com.project.ms_order.service;
 
 
-import com.project.ms_order.dto.OrderDTO;
-import com.project.ms_order.dto.PageDTO;
 import com.project.ms_order.exceptions.BusinessRulesException;
+import com.project.ms_order.model.dto.OrderDTO;
+import com.project.ms_order.model.dto.PageDTO;
 
 public interface OrderService {
 

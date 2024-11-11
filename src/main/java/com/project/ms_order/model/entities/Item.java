@@ -1,6 +1,6 @@
-package com.project.ms_order.model;
+package com.project.ms_order.model.entities;
 
-import com.project.ms_order.dto.ItemDTO;
+import com.project.ms_order.model.dto.ItemDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
