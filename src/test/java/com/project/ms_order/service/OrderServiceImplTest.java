@@ -1,36 +1,33 @@
 package com.project.ms_order.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.project.ms_order.exceptions.DataBaseException;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.runner.RunWith;
-import static org.mockito.ArgumentMatchers.any;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.ms_order.exceptions.BusinessRulesException;
+import com.project.ms_order.exceptions.DataBaseException;
 import com.project.ms_order.factory.OrdersFactory;
 import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.dto.PageDTO;
 import com.project.ms_order.model.entities.OrdersEntity;
 import com.project.ms_order.repository.OrderRepository;
 import com.project.ms_order.service.impl.OrderServiceImp;
-
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderServiceImplTest {
