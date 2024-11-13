@@ -1,29 +1,15 @@
 package com.project.ms_order.model.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.project.ms_order.model.dto.OrderDTO;
+import com.project.ms_order.model.enums.Status;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.project.ms_order.model.dto.OrderDTO;
-import com.project.ms_order.model.enums.Status;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -38,6 +24,9 @@ public class OrdersEntity {
     private Long id;
 
     @NotNull
+    private Long customerId;
+
+    @NotNull
     private LocalDateTime dateTime;
 
     @NotNull
@@ -49,7 +38,48 @@ public class OrdersEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     private List<ItemEntity> items = new ArrayList<>();
-    
+
+    public static OrdersEntity fromDTOtoEntity(OrderDTO orderDTO) {
+        OrdersEntity order = OrdersEntity.builder()
+                .id(orderDTO.getId())
+                .customerId(orderDTO.getCustomerId())
+                .dateTime(orderDTO.getDateTime())
+                .status(orderDTO.getStatus())
+                .build();
+
+        if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
+            List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
+                    .map(itemDto -> {
+                        ItemEntity itemEntity = ItemEntity.fromDTOtoEntity(itemDto);
+                        return itemEntity;
+                    })
+                    .collect(Collectors.toList());
+
+            order.setItems(itemsEntity);
+            order.setTotalAmount(itemsEntity.stream()
+                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                    .sum());
+        } else {
+            order.setTotalAmount(0.0);
+        }
+
+        return order;
+    }
+
+    public static OrderDTO fromEntityToDTO(OrdersEntity order) {
+        OrderDTO orderDTO = OrderDTO.builder()
+                .id(order.getId())
+                .customerId(order.getCustomerId())
+                .dateTime(order.getDateTime())
+                .status(order.getStatus())
+                .totalAmount(order.getTotalAmount())
+                .items(order.getItems().stream()
+                        .map(ItemEntity::fromEntityToDTO)
+                        .collect(Collectors.toList()))
+                .build();
+
+        return orderDTO;
+    }
 
     public void updateFromDTO(OrderDTO orderDTO) {
         if (orderDTO.getDateTime() != null) {
@@ -61,53 +91,13 @@ public class OrdersEntity {
         if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
             this.items.clear();
             List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
-                .map(ItemEntity::fromDTOtoEntity)
-                .collect(Collectors.toList());
+                    .map(ItemEntity::fromDTOtoEntity)
+                    .collect(Collectors.toList());
             itemsEntity.forEach(item -> item.setOrders(this));
             this.items.addAll(itemsEntity);
             this.totalAmount = itemsEntity.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                    .sum();
         }
-    }
-
-    public static OrdersEntity fromDTOtoEntity(OrderDTO orderDTO) {
-        OrdersEntity order = OrdersEntity.builder()
-            .id(orderDTO.getId())
-            .dateTime(orderDTO.getDateTime())
-            .status(orderDTO.getStatus())
-            .build();
-
-        if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
-            List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
-                .map(itemDto -> {
-                    ItemEntity itemEntity = ItemEntity.fromDTOtoEntity(itemDto);
-                    return itemEntity;
-                })
-                .collect(Collectors.toList());
-
-            order.setItems(itemsEntity);
-            order.setTotalAmount(itemsEntity.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum());
-        } else {
-            order.setTotalAmount(0.0);
-        }
-
-        return order;
-    }
-
-    public static OrderDTO fromEntityToDTO(OrdersEntity order) {
-        OrderDTO orderDTO = OrderDTO.builder()
-            .id(order.getId())
-            .dateTime(order.getDateTime())
-            .status(order.getStatus())
-            .totalAmount(order.getTotalAmount())
-            .items(order.getItems().stream()
-                .map(ItemEntity::fromEntityToDTO)
-                .collect(Collectors.toList()))
-            .build();
-
-        return orderDTO;
     }
 }

@@ -45,7 +45,7 @@ public class OrderServiceImplTest {
 
     @Before
     public void setup() {
-        orderService = new OrderServiceImp(repository, objectMapper, null);
+        orderService = new OrderServiceImp(repository, objectMapper);
     }
 
     @Test

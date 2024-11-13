@@ -1,19 +1,10 @@
 package com.project.ms_order.model.entities;
 
 import com.project.ms_order.model.dto.ItemDTO;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
@@ -24,7 +15,7 @@ import lombok.Setter;
 @Builder
 public class ItemEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -35,7 +26,7 @@ public class ItemEntity {
 
     private Double price;
 
-    @ManyToOne(optional=true)
+    @ManyToOne(optional = true)
     private OrdersEntity orders;
 
     public static ItemEntity fromDTOtoEntity(ItemDTO item) {

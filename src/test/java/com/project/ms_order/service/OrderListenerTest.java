@@ -34,12 +34,6 @@ public class OrderListenerTest {
 
     private OrderDTO order;
 
-    @BeforeEach
-    public void setup() {
-        order = new OrderDTO();
-        order.setId(1L);
-        order.setTotalAmount(100.0);
-    }
 
     @Test
     public void testMessageProcessingSuccess() throws JsonProcessingException {

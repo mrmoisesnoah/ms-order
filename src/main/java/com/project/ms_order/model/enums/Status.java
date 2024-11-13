@@ -8,6 +8,6 @@ public enum Status {
     CONFIRMED,
     READY,
     OUT_FOR_DELIVERY,
-    DELIVERED;
+    DELIVERED
 }
 
