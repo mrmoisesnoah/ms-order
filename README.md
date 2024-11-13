@@ -87,11 +87,18 @@ Aqui está um exemplo de payload para um objeto `OrderDTO` que pode ser enviado 
 ```
 
 ### Campos do `OrderDTO`:
-- `id`: Identificador único do pedido.
-- `customerId`: ID do cliente que fez o pedido.
-- `status`: Status atual do pedido (ex: `NEW`, `PROCESSED`).
-- `totalPrice`: Valor total do pedido.
-- `items`: Lista de itens no pedido, cada um com o ID do produto, quantidade e preço.
+
+- `id` (Long): Identificador único do pedido.
+- `customerId` (Long): ID do cliente que fez o pedido.
+- `dateTime` (String - ISO 8601): Data e hora em que o pedido foi feito.
+- `status` (String): Status atual do pedido. Exemplos de valores: `PLACED`, `PROCESSING`, `SHIPPED`, `DELIVERED`.
+- `totalPrice` (Double): Valor total do pedido, calculado com base no preço e quantidade dos itens.
+- `items` (Array): Lista de itens do pedido. Cada item deve conter:
+  - `id` (Long): Identificador do item.
+  - `quantity` (Integer): Quantidade do item.
+  - `description` (String): Descrição do produto.
+  - `price` (Double): Preço unitário do produto.
+
 
 ## Como Rodar a Aplicação com Docker
 
