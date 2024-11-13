@@ -68,6 +68,7 @@ Aqui está um exemplo de payload para um objeto `OrderDTO` que pode ser enviado 
 ```json
 {
     "id": 123,
+    "customerId": 321,
     "dateTime": "2024-11-12T16:45:00",
     "status": "PLACED",
     "items": [
