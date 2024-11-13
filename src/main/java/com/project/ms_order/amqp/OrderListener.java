@@ -20,16 +20,14 @@ public class OrderListener {
     private final ObjectMapper objectMapper;
 
     @RabbitListener(queues = "order.details-requests")
-    public void message(@Payload OrderDTO order) {
-        String message = "";
-        try {
-            message = objectMapper.writeValueAsString(order);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+    public void message(@Payload OrderDTO order) throws JsonProcessingException {
+        if (order == null) {
+            log.error("Received null order message");
+            throw new IllegalArgumentException("Order cannot be null");
         }
-        log.info("Received message " + message);
 
+        log.info("Received message: {}", objectMapper.writeValueAsString(order));
         orderProcessor.processOrder(order);
-
     }
+
 }

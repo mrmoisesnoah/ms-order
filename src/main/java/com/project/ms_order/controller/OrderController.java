@@ -2,6 +2,7 @@ package com.project.ms_order.controller;
 
 import com.project.ms_order.controller.documentation.OrderControllerDoc;
 import com.project.ms_order.exceptions.BusinessRulesException;
+import com.project.ms_order.exceptions.DataBaseException;
 import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.dto.PageDTO;
 import com.project.ms_order.service.OrderService;
@@ -9,10 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -22,8 +20,10 @@ public class OrderController implements OrderControllerDoc {
     @Autowired
     private OrderService service;
 
-    @GetMapping()
-    public PageDTO<OrderDTO> listPaginated(Integer page, Integer size) {
+    @GetMapping
+    public PageDTO<OrderDTO> listPaginated(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
         try {
             return service.listPaginated(page, size);
         } catch (BusinessRulesException e) {
@@ -31,10 +31,15 @@ public class OrderController implements OrderControllerDoc {
         }
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getById(@PathVariable @NotNull Long id) {
-        OrderDTO dto = service.getOrderById(id);
-        return ResponseEntity.ok(dto);
+        try {
+            OrderDTO dto = service.getOrderById(id);
+            return ResponseEntity.ok(dto);
+        } catch (DataBaseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
 }

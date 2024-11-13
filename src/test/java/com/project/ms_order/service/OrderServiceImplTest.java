@@ -3,6 +3,7 @@ package com.project.ms_order.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.project.ms_order.exceptions.DataBaseException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,7 +72,7 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void testGetOrderByIdSuccess() {
+    public void testGetOrderByIdSuccess() throws DataBaseException {
         OrdersEntity order = OrdersFactory.getOrdersEntity();
 
         when(repository.findById(1L)).thenReturn(Optional.of(order));
@@ -83,8 +84,8 @@ public class OrderServiceImplTest {
         verify(repository, times(1)).findById(1L);
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void testGetOrderByIdNotFound() {
+    @Test(expected = DataBaseException.class)
+    public void testGetOrderByIdNotFound() throws DataBaseException {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
         orderService.getOrderById(1L);
@@ -108,12 +109,15 @@ public class OrderServiceImplTest {
     @Test
     public void testProcessOrderExists() {
         OrderDTO orderDTO = OrdersFactory.getOrderDTO();
+        OrdersEntity orderEntity = OrdersFactory.getOrdersEntity();
 
         when(repository.existsById(orderDTO.getId())).thenReturn(true);
+        when(repository.findById(orderDTO.getId())).thenReturn(Optional.of(orderEntity));
 
         orderService.processOrder(orderDTO);
 
         verify(repository, times(1)).existsById(orderDTO.getId());
+        verify(repository, times(1)).findById(orderDTO.getId());
     }
 
     @Test

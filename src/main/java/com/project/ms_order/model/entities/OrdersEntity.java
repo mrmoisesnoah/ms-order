@@ -89,15 +89,15 @@ public class OrdersEntity {
             this.status = orderDTO.getStatus();
         }
         if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
-            this.items.clear();
-            List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
+            this.items = orderDTO.getItems().stream()
                     .map(ItemEntity::fromDTOtoEntity)
                     .collect(Collectors.toList());
-            itemsEntity.forEach(item -> item.setOrders(this));
-            this.items.addAll(itemsEntity);
-            this.totalAmount = itemsEntity.stream()
+            this.items.forEach(item -> item.setOrders(this));
+
+            this.totalAmount = this.items.stream()
                     .mapToDouble(item -> item.getPrice() * item.getQuantity())
                     .sum();
         }
     }
+
 }

@@ -4,6 +4,7 @@ package com.project.ms_order.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.ms_order.exceptions.BusinessRulesException;
+import com.project.ms_order.exceptions.DataBaseException;
 import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.dto.PageDTO;
 import com.project.ms_order.model.entities.OrdersEntity;
@@ -47,9 +48,9 @@ public class OrderServiceImp implements OrderService, OrderProcessor {
         return new PageDTO<>(0L, 0, 0, size, emptyList);
     }
 
-    public OrderDTO getOrderById(Long id) {
+    public OrderDTO getOrderById(Long id) throws DataBaseException {
         OrdersEntity order = repository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new DataBaseException("Order " + id + " not found"));
 
         return OrdersEntity.fromEntityToDTO(order);
     }
