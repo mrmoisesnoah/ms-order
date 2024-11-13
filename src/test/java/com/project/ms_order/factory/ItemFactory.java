@@ -10,7 +10,7 @@ public class ItemFactory {
             .id(1L)
             .quantity(2)
             .description("Test Item")
-            .price(50.0)  // Exemplo: cada item custa 50.0
+            .price(50.0) 
             .build();
     }
 
@@ -19,7 +19,7 @@ public class ItemFactory {
             .id(1L)
             .quantity(2)
             .description("Test Item")
-            .price(50.0)  // Exemplo: cada item custa 50.0
+            .price(50.0)  
             .build();
     }
 }
