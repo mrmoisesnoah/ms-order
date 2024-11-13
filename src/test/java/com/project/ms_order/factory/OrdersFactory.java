@@ -11,7 +11,7 @@ public class OrdersFactory {
 
     public static OrdersEntity getOrdersEntity() {
         return OrdersEntity.builder()
-                .id(1L)
+                .ordersId(1L)
                 .dateTime(LocalDateTime.now())
                 .status(Status.PLACED)
                 .totalAmount(100.0)
@@ -21,7 +21,7 @@ public class OrdersFactory {
 
     public static OrderDTO getOrderDTO() {
         return OrderDTO.builder()
-                .id(1L)
+                .ordersId(1L)
                 .dateTime(LocalDateTime.now())
                 .status(Status.PAID)
                 .totalAmount(100.0)

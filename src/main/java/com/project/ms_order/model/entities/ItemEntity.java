@@ -1,5 +1,6 @@
 package com.project.ms_order.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.ms_order.model.dto.ItemDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,9 @@ public class ItemEntity {
     private Long id;
 
     @NotNull
+    private Long productId;
+
+    @NotNull
     @Positive
     private Integer quantity;
 
@@ -27,11 +31,12 @@ public class ItemEntity {
     private Double price;
 
     @ManyToOne(optional = true)
+    @JsonBackReference
     private OrdersEntity orders;
 
     public static ItemEntity fromDTOtoEntity(ItemDTO item) {
         return ItemEntity.builder()
-                .id(item.getId())
+                .productId(item.getProductId())
                 .quantity(item.getQuantity())
                 .description(item.getDescription())
                 .price(item.getPrice())
@@ -40,7 +45,7 @@ public class ItemEntity {
 
     public static ItemDTO fromEntityToDTO(ItemEntity item) {
         return ItemDTO.builder()
-                .id(item.getId())
+                .productId(item.getProductId())
                 .quantity(item.getQuantity())
                 .description(item.getDescription())
                 .price(item.getPrice())

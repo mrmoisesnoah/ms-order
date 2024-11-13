@@ -49,7 +49,7 @@ public class OrderServiceImp implements OrderService, OrderProcessor {
     }
 
     public OrderDTO getOrderById(Long id) throws DataBaseException {
-        OrdersEntity order = repository.findById(id)
+        OrdersEntity order = repository.findByOrdersId(id)
                 .orElseThrow(() -> new DataBaseException("Order " + id + " not found"));
 
         return OrdersEntity.fromEntityToDTO(order);
@@ -70,8 +70,8 @@ public class OrderServiceImp implements OrderService, OrderProcessor {
     }
 
     public void processOrder(OrderDTO order) {
-        if (repository.existsById(order.getId())) {
-            updateOrder(order.getId(), order);
+        if (repository.existsByOrdersId(order.getOrdersId())) {
+            updateOrder(order.getOrdersId(), order);
         } else {
             createOrder(order);
         }
@@ -79,8 +79,10 @@ public class OrderServiceImp implements OrderService, OrderProcessor {
 
 
     public OrderDTO updateOrder(Long id, OrderDTO dto) {
-        OrdersEntity order = repository.findById(id)
+        OrdersEntity order = repository.findByOrdersId(id)
                 .orElseThrow(() -> new EntityNotFoundException("OrderEntity with id " + id + " not found"));
+
+        order.getItems().clear();
 
         order.updateFromDTO(dto);
         repository.save(order);

@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderDTO {
 
     @Schema(description = "Unique identifier of the order", example = "1")
-    private Long id;
+    private Long ordersId;
 
     @Schema(description = "Unique identifier of the customer who placed the order", example = "1001")
     private Long customerId;

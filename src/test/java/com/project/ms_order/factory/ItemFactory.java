@@ -7,7 +7,7 @@ public class ItemFactory {
 
     public static ItemEntity getItemEntity() {
         return ItemEntity.builder()
-                .id(1L)
+                .productId(1L)
                 .quantity(2)
                 .description("Test Item")
                 .price(50.0)
@@ -16,7 +16,7 @@ public class ItemFactory {
 
     public static ItemDTO getItemDTO() {
         return ItemDTO.builder()
-                .id(1L)
+                .productId(1L)
                 .quantity(2)
                 .description("Test Item")
                 .price(50.0)

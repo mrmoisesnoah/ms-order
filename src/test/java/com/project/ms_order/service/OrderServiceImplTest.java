@@ -72,18 +72,18 @@ public class OrderServiceImplTest {
     public void testGetOrderByIdSuccess() throws DataBaseException {
         OrdersEntity order = OrdersFactory.getOrdersEntity();
 
-        when(repository.findById(1L)).thenReturn(Optional.of(order));
+        when(repository.findByOrdersId(1L)).thenReturn(Optional.of(order));
 
         OrderDTO result = orderService.getOrderById(1L);
 
         assertNotNull(result);
-        assertEquals(order.getId(), result.getId());
-        verify(repository, times(1)).findById(1L);
+        assertEquals(order.getOrdersId(), result.getOrdersId());
+        verify(repository, times(1)).findByOrdersId(1L);
     }
 
     @Test(expected = DataBaseException.class)
     public void testGetOrderByIdNotFound() throws DataBaseException {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findByOrdersId(1L)).thenReturn(Optional.empty());
 
         orderService.getOrderById(1L);
     }
@@ -94,12 +94,11 @@ public class OrderServiceImplTest {
         OrdersEntity order = OrdersFactory.getOrdersEntity();
 
         when(repository.save(any(OrdersEntity.class))).thenReturn(order);
-        when(objectMapper.writeValueAsString(any(OrdersEntity.class))).thenReturn("Order JSON");
 
         OrderDTO result = orderService.createOrder(orderDTO);
 
         assertNotNull(result);
-        assertEquals(orderDTO.getId(), result.getId());
+        assertEquals(orderDTO.getOrdersId(), result.getOrdersId());
         verify(repository, times(1)).save(any(OrdersEntity.class));
     }
 
@@ -108,13 +107,13 @@ public class OrderServiceImplTest {
         OrderDTO orderDTO = OrdersFactory.getOrderDTO();
         OrdersEntity orderEntity = OrdersFactory.getOrdersEntity();
 
-        when(repository.existsById(orderDTO.getId())).thenReturn(true);
-        when(repository.findById(orderDTO.getId())).thenReturn(Optional.of(orderEntity));
+        when(repository.existsByOrdersId(orderDTO.getOrdersId())).thenReturn(true);
+        when(repository.findByOrdersId(orderDTO.getOrdersId())).thenReturn(Optional.of(orderEntity));
 
         orderService.processOrder(orderDTO);
 
-        verify(repository, times(1)).existsById(orderDTO.getId());
-        verify(repository, times(1)).findById(orderDTO.getId());
+        verify(repository, times(1)).existsByOrdersId(orderDTO.getOrdersId());
+        verify(repository, times(1)).findByOrdersId(orderDTO.getOrdersId());
     }
 
     @Test
@@ -122,12 +121,12 @@ public class OrderServiceImplTest {
         OrderDTO orderDTO = OrdersFactory.getOrderDTO();
         OrdersEntity order = OrdersFactory.getOrdersEntity();
 
-        when(repository.existsById(orderDTO.getId())).thenReturn(false);
+        when(repository.existsByOrdersId(orderDTO.getOrdersId())).thenReturn(false);
         when(repository.save(any(OrdersEntity.class))).thenReturn(order);
 
         orderService.processOrder(orderDTO);
 
-        verify(repository, times(1)).existsById(orderDTO.getId());
+        verify(repository, times(1)).existsByOrdersId(orderDTO.getOrdersId());
         verify(repository, times(1)).save(any(OrdersEntity.class));
     }
 
@@ -136,15 +135,14 @@ public class OrderServiceImplTest {
         OrdersEntity order = OrdersFactory.getOrdersEntity();
         OrderDTO orderDTO = OrdersFactory.getOrderDTO();
 
-        when(repository.findById(order.getId())).thenReturn(Optional.of(order));
+        when(repository.findByOrdersId(order.getOrdersId())).thenReturn(Optional.of(order));
         when(repository.save(any(OrdersEntity.class))).thenReturn(order);
-        when(objectMapper.writeValueAsString(any(OrdersEntity.class))).thenReturn("Order JSON");
 
-        OrderDTO result = orderService.updateOrder(order.getId(), orderDTO);
+        OrderDTO result = orderService.updateOrder(order.getOrdersId(), orderDTO);
 
         assertNotNull(result);
-        assertEquals(orderDTO.getId(), result.getId());
-        verify(repository, times(1)).findById(order.getId());
+        assertEquals(orderDTO.getOrdersId(), result.getOrdersId());
+        verify(repository, times(1)).findByOrdersId(order.getOrdersId());
         verify(repository, times(1)).save(any(OrdersEntity.class));
     }
 
@@ -152,8 +150,8 @@ public class OrderServiceImplTest {
     public void testUpdateOrderNotFound() {
         OrderDTO orderDTO = OrdersFactory.getOrderDTO();
 
-        when(repository.findById(orderDTO.getId())).thenReturn(Optional.empty());
+        when(repository.findByOrdersId(orderDTO.getOrdersId())).thenReturn(Optional.empty());
 
-        orderService.updateOrder(orderDTO.getId(), orderDTO);
+        orderService.updateOrder(orderDTO.getOrdersId(), orderDTO);
     }
 }

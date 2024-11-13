@@ -11,7 +11,7 @@ import lombok.*;
 public class ItemDTO {
 
     @Schema(description = "Unique identifier of the item", example = "1")
-    private Long id;
+    private Long productId;
 
     @Schema(description = "Quantity of the item ordered", example = "2")
     private Integer quantity;

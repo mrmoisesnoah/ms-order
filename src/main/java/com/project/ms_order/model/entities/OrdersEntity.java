@@ -1,5 +1,6 @@
 package com.project.ms_order.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.enums.Status;
 import jakarta.persistence.*;
@@ -24,6 +25,9 @@ public class OrdersEntity {
     private Long id;
 
     @NotNull
+    private Long ordersId;
+
+    @NotNull
     private Long customerId;
 
     @NotNull
@@ -36,12 +40,13 @@ public class OrdersEntity {
     @NotNull
     private Double totalAmount;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<ItemEntity> items = new ArrayList<>();
 
     public static OrdersEntity fromDTOtoEntity(OrderDTO orderDTO) {
         OrdersEntity order = OrdersEntity.builder()
-                .id(orderDTO.getId())
+                .ordersId(orderDTO.getOrdersId())
                 .customerId(orderDTO.getCustomerId())
                 .dateTime(orderDTO.getDateTime())
                 .status(orderDTO.getStatus())
@@ -49,13 +54,12 @@ public class OrdersEntity {
 
         if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
             List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
-                    .map(itemDto -> {
-                        ItemEntity itemEntity = ItemEntity.fromDTOtoEntity(itemDto);
-                        return itemEntity;
-                    })
+                    .map(ItemEntity::fromDTOtoEntity)
                     .collect(Collectors.toList());
 
             order.setItems(itemsEntity);
+            itemsEntity.forEach(item -> item.setOrders(order));
+
             order.setTotalAmount(itemsEntity.stream()
                     .mapToDouble(item -> item.getPrice() * item.getQuantity())
                     .sum());
@@ -66,9 +70,11 @@ public class OrdersEntity {
         return order;
     }
 
+
     public static OrderDTO fromEntityToDTO(OrdersEntity order) {
-        OrderDTO orderDTO = OrderDTO.builder()
-                .id(order.getId())
+
+        return OrderDTO.builder()
+                .ordersId(order.getOrdersId())
                 .customerId(order.getCustomerId())
                 .dateTime(order.getDateTime())
                 .status(order.getStatus())
@@ -77,8 +83,6 @@ public class OrdersEntity {
                         .map(ItemEntity::fromEntityToDTO)
                         .collect(Collectors.toList()))
                 .build();
-
-        return orderDTO;
     }
 
     public void updateFromDTO(OrderDTO orderDTO) {
