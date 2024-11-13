@@ -22,32 +22,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "pedidos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class OrdersEntity {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private LocalDateTime dateTime;
 
-    @NotNull @Enumerated(EnumType.STRING)
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @NotNull
     private Double totalAmount;
 
-    @OneToMany(cascade=CascadeType.PERSIST, mappedBy="order")
-    private List<Item> items = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
+    private List<ItemEntity> items = new ArrayList<>();
+    
 
     public void updateFromDTO(OrderDTO orderDTO) {
         if (orderDTO.getDateTime() != null) {
@@ -56,12 +58,12 @@ public class Order {
         if (orderDTO.getStatus() != null) {
             this.status = orderDTO.getStatus();
         }
-        if (orderDTO.getItems() != null) {
+        if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
             this.items.clear();
-            List<Item> itemsEntity = orderDTO.getItems().stream()
-                .map(Item::fromDTOtoEntity)
+            List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
+                .map(ItemEntity::fromDTOtoEntity)
                 .collect(Collectors.toList());
-            itemsEntity.forEach(item -> item.setOrder(this));
+            itemsEntity.forEach(item -> item.setOrders(this));
             this.items.addAll(itemsEntity);
             this.totalAmount = itemsEntity.stream()
                 .mapToDouble(item -> item.getPrice() * item.getQuantity())
@@ -69,40 +71,43 @@ public class Order {
         }
     }
 
-    public static Order fromDTOtoEntity(OrderDTO orderDTO) {
-        Order order = Order.builder()
+    public static OrdersEntity fromDTOtoEntity(OrderDTO orderDTO) {
+        OrdersEntity order = OrdersEntity.builder()
             .id(orderDTO.getId())
             .dateTime(orderDTO.getDateTime())
             .status(orderDTO.getStatus())
-            .totalAmount(orderDTO.getItems().stream()
-                .mapToDouble(itemDto -> itemDto.getPrice() * itemDto.getQuantity())
-                .sum())
             .build();
 
-        List<Item> itemsEntity = orderDTO.getItems().stream()
-            .map(itemDto -> {
-                Item itemEntity = Item.fromDTOtoEntity(itemDto);
-                itemEntity.setOrder(order);
-                return itemEntity;
-            })
-            .collect(Collectors.toList());
+        if (orderDTO.getItems() != null && !orderDTO.getItems().isEmpty()) {
+            List<ItemEntity> itemsEntity = orderDTO.getItems().stream()
+                .map(itemDto -> {
+                    ItemEntity itemEntity = ItemEntity.fromDTOtoEntity(itemDto);
+                    return itemEntity;
+                })
+                .collect(Collectors.toList());
 
-        order.setItems(itemsEntity);
+            order.setItems(itemsEntity);
+            order.setTotalAmount(itemsEntity.stream()
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .sum());
+        } else {
+            order.setTotalAmount(0.0);
+        }
+
         return order;
     }
 
-    public static OrderDTO fromEntityToDTO(Order order) {
+    public static OrderDTO fromEntityToDTO(OrdersEntity order) {
         OrderDTO orderDTO = OrderDTO.builder()
             .id(order.getId())
             .dateTime(order.getDateTime())
             .status(order.getStatus())
+            .totalAmount(order.getTotalAmount()) // Atualiza o totalAmount no DTO
             .items(order.getItems().stream()
-                .map(Item::fromEntityToDTO)
+                .map(ItemEntity::fromEntityToDTO)
                 .collect(Collectors.toList()))
             .build();
 
         return orderDTO;
     }
-
-
 }

@@ -18,13 +18,12 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "item_do_pedido")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
+public class ItemEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +36,11 @@ public class Item {
 
     private Double price;
 
-    @ManyToOne(optional=false)
-    private Order order;
+    @ManyToOne(optional=true)
+    private OrdersEntity orders;
 
-    public static Item fromDTOtoEntity(ItemDTO item) {
-        return Item.builder()
+    public static ItemEntity fromDTOtoEntity(ItemDTO item) {
+        return ItemEntity.builder()
                 .id(item.getId())
                 .quantity(item.getQuantity())
                 .description(item.getDescription())
@@ -49,7 +48,7 @@ public class Item {
                 .build();
     }
 
-    public static ItemDTO fromEntityToDTO(Item item) {
+    public static ItemDTO fromEntityToDTO(ItemEntity item) {
         return ItemDTO.builder()
                 .id(item.getId())
                 .quantity(item.getQuantity())

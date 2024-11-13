@@ -20,7 +20,7 @@ public class OrderListener {
     private final OrderProcessor orderProcessor;
     private final ObjectMapper objectMapper;
 
-    @RabbitListener(queues = "orders.details-requests")
+    @RabbitListener(queues = "order.details-requests")
     public void message(@Payload OrderDTO order) {
         String message = "";
         try {
