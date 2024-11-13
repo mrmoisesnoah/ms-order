@@ -1,16 +1,25 @@
-# MS Order - Microservice for Order Management
+# MS Order - Microserviço para Gestão de Pedidos
 
-## Sobre o projeto
+## Sobre o Projeto
 
-Este projeto é um microserviço responsável pela gestão de pedidos. Ele foi desenvolvido utilizando o **Spring Framework** e possui integração com **RabbitMQ** para comunicação assíncrona, **JPA** para persistência de dados e **Swagger** para documentação dos endpoints.
+Este é um microserviço desenvolvido para gestão de pedidos, utilizando o **Spring Framework**. Ele faz integração com **RabbitMQ** para comunicação assíncrona, **JPA** para persistência de dados e **Swagger** para documentação da API. O sistema é modular e fácil de testar, com endpoints bem definidos e documentação disponível via Swagger.
 
-A aplicação foi projetada para ser altamente modular e fácil de testar. Além disso, a aplicação também oferece documentação dos endpoints via Swagger.
+## Tecnologias Utilizadas
 
-## Como utilizar a API
+- **Spring Boot**: Framework principal para a construção da aplicação.
+- **Spring Data JPA**: Para persistência de dados no banco de dados.
+- **Spring AMQP**: Para integração com RabbitMQ.
+- **Swagger**: Para documentação da API.
+- **H2 Database**: Banco de dados em memória para desenvolvimento.
+- **JUnit & Mockito**: Para testes unitários.
+- **RabbitMQ**: Para comunicação assíncrona entre os serviços.
+- **Java 17**: Versão do JDK utilizada.
+
+## Como Utilizar a API
 
 ### Endpoints Disponíveis
 
-A aplicação oferece diversos endpoints para gerenciar os pedidos. Para acessar a documentação completa dos endpoints, você pode usar o Swagger, que está disponível após rodar a aplicação, no seguinte link:
+A aplicação oferece diversos endpoints para gerenciar os pedidos. A documentação completa dos endpoints pode ser acessada via Swagger após rodar a aplicação, no seguinte link:
 
 [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 
@@ -36,7 +45,7 @@ GET http://localhost:8080/orders?page=0&size=10
 - **Método**: `GET`
 - **Endpoint**: `/orders/{id}`
 - **Descrição**: Retorna um pedido específico pelo ID.
-  
+
 **Exemplo de requisição**:
 
 ```http
@@ -50,42 +59,124 @@ A aplicação também possui integração com **RabbitMQ**, onde a fila de pedid
 - **Fila**: `orders.details-requests`
 - **Descrição**: Quando um pedido é colocado na fila `orders.details-requests`, ele será processado pelo `OrderListener`, que irá criar ou atualizar o pedido com base no ID do pedido.
 
-## Tecnologias Utilizadas
+### Payload para `OrderDTO`
 
-- **Spring Boot**: Framework principal para construção da aplicação.
-- **Spring Data JPA**: Para persistência de dados no banco de dados.
-- **Spring AMQP**: Para integração com RabbitMQ.
-- **Swagger**: Para documentação da API.
-- **H2 Database**: Banco de dados em memória para desenvolvimento.
-- **JUnit & Mockito**: Para testes unitários.
-- **Eureka Client**: Para descoberta de serviços (caso utilizado com outros microsserviços).
-- **Java 17**: Versão do JDK utilizada.
-- **RabbitMQ**: Para comunicação assíncrona de pedidos.
+Aqui está um exemplo de payload para um objeto `OrderDTO` que pode ser enviado para a fila `orders.details-requests`:
 
-## Como Rodar a Aplicação
+```json
+{
+    "id": 123,
+    "dateTime": "2024-11-12T16:45:00",
+    "status": "PLACED",
+    "items": [
+        {
+            "id": 1,
+            "quantity": 2,
+            "description": "Product A",
+            "price": 10.99
+        },
+        {
+            "id": 2,
+            "quantity": 1,
+            "description": "Product B",
+            "price": 25.50
+        }
+    ]
+}
 
-1. Clone o repositório para sua máquina local.
+```
+
+### Campos do `OrderDTO`:
+- `id`: Identificador único do pedido.
+- `customerId`: ID do cliente que fez o pedido.
+- `status`: Status atual do pedido (ex: `NEW`, `PROCESSED`).
+- `totalPrice`: Valor total do pedido.
+- `items`: Lista de itens no pedido, cada um com o ID do produto, quantidade e preço.
+
+## Como Rodar a Aplicação com Docker
+
+### Passo 1: Instalando o Docker
+
+1. **Instalar o Docker**:
+
+   - Para **Windows** e **Mac**: Baixe e instale o Docker Desktop [aqui](https://www.docker.com/products/docker-desktop).
+   - Para **Linux**: Siga as instruções específicas para a sua distribuição [aqui](https://docs.docker.com/engine/install/).
+
+2. **Verificar a instalação do Docker**:
+
+   Após instalar, verifique se o Docker está instalado corretamente executando o comando:
+
+   ```bash
+   docker --version
+   ```
+
+### Passo 2: Rodando o RabbitMQ com Docker
+
+Para rodar o RabbitMQ com Docker, você pode usar o seguinte comando:
+
+```bash
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+```
+
+#### Explicação do comando:
+
+- `docker run`: Inicia um novo container.
+- `-it`: Executa o container de forma interativa.
+- `--rm`: Remove o container automaticamente quando ele for parado.
+- `--name rabbitmq`: Dá o nome `rabbitmq` ao container.
+- `-p 5672:5672`: Mapeia a porta 5672 (default do RabbitMQ) do container para a porta 5672 da máquina host.
+- `-p 15672:15672`: Mapeia a porta 15672 (porta do painel de administração do RabbitMQ) do container para a porta 15672 da máquina host.
+- `rabbitmq:3.9-management`: Especifica a imagem do RabbitMQ com o plugin de gerenciamento.
+
+Após rodar o comando, o RabbitMQ estará acessível nas seguintes URLs:
+- **RabbitMQ (porta 5672)**: Para conexão com a fila.
+- **Painel de Administração (porta 15672)**: [http://localhost:15672](http://localhost:15672) (usuário: `guest`, senha: `guest`).
+
+### Passo 3: Enviando o Payload para a Fila do RabbitMQ
+
+1. **Acesse o Painel de Administração**:
+
+   Abra o navegador e acesse o painel de administração do RabbitMQ em [http://localhost:15672](http://localhost:15672) com as credenciais padrão:
+   - **Usuário**: `guest`
+   - **Senha**: `guest`
+
+2. **Criar uma Fila (se necessário)**:
+
+   - Vá até a aba "Queues" no painel.
+   - Clique em "Add a new queue" e crie uma fila com o nome `orders.details-requests` (caso não tenha sido criada automaticamente).
+
+3. **Publicar uma Mensagem na Fila**:
+
+   - No painel, vá até a fila `orders.details-requests` e clique em "Publish Message".
+   - Cole o payload JSON (como mostrado acima) na área de mensagem e clique em "Publish".
+
+   O serviço `OrderListener` estará ouvindo essa fila e processará a mensagem assim que for recebida.
+
+### Como Rodar a Aplicação Localmente
+
+1. **Clone o repositório para sua máquina local**:
 
    ```bash
    git clone https://github.com/seu-usuario/ms-order.git
    cd ms-order
    ```
 
-2. Compile o projeto utilizando o Maven.
+2. **Compile o projeto com Maven**:
 
    ```bash
    mvn clean install
    ```
 
-3. Execute a aplicação com o comando:
+3. **Execute a aplicação com o Maven**:
 
    ```bash
    mvn spring-boot:run
    ```
 
-   O microserviço será iniciado na porta `8080` ou em uma porta aleatória (se configurado com `server.port=0`).
+   A aplicação será iniciada na porta `8080` (ou em uma porta aleatória se configurado com `server.port=0`).
 
-4. Acesse a aplicação via Swagger no seguinte link:
+4. **Acesse a documentação Swagger**:
+
+   Acesse os endpoints da aplicação através da documentação Swagger no seguinte link:
 
    [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
-

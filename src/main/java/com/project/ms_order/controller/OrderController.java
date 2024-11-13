@@ -3,9 +3,13 @@ package com.project.ms_order.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.project.ms_order.controller.documentation.OrderControllerDoc;
 import com.project.ms_order.exceptions.BusinessRulesException;
 import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.dto.PageDTO;
@@ -15,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+public class OrderController implements OrderControllerDoc {
 
         @Autowired
         private OrderService service;
