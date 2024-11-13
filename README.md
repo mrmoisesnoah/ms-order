@@ -91,7 +91,15 @@ Aqui está um exemplo de payload para um objeto `OrderDTO` que pode ser enviado 
 - `id` (Long): Identificador único do pedido.
 - `customerId` (Long): ID do cliente que fez o pedido.
 - `dateTime` (String - ISO 8601): Data e hora em que o pedido foi feito.
-- `status` (String): Status atual do pedido. Exemplos de valores: `PLACED`, `PROCESSING`, `SHIPPED`, `DELIVERED`.
+- `status` (String): Status atual do pedido. Exemplos de valores: 
+  - `PLACED`: Pedido foi realizado com sucesso, mas ainda não processado.
+  - `CANCELED`: Pedido foi cancelado.
+  - `PAID`: Pagamento foi realizado com sucesso.
+  - `NOT_AUTHORIZED`: O pagamento não foi autorizado.
+  - `CONFIRMED`: Pedido foi confirmado para processamento.
+  - `READY`: Pedido está pronto para ser enviado.
+  - `OUT_FOR_DELIVERY`: Pedido está em processo de entrega.
+  - `DELIVERED`: Pedido foi entregue ao cliente.
 - `totalPrice` (Double): Valor total do pedido, calculado com base no preço e quantidade dos itens.
 - `items` (Array): Lista de itens do pedido. Cada item deve conter:
   - `id` (Long): Identificador do item.
