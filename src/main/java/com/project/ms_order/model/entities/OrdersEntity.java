@@ -102,7 +102,7 @@ public class OrdersEntity {
             .id(order.getId())
             .dateTime(order.getDateTime())
             .status(order.getStatus())
-            .totalAmount(order.getTotalAmount()) // Atualiza o totalAmount no DTO
+            .totalAmount(order.getTotalAmount())
             .items(order.getItems().stream()
                 .map(ItemEntity::fromEntityToDTO)
                 .collect(Collectors.toList()))

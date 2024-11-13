@@ -2,7 +2,7 @@
 
 ## Sobre o Projeto
 
-Este é um microserviço desenvolvido para gestão de pedidos, utilizando o **Spring Framework**. Ele faz integração com **RabbitMQ** para comunicação assíncrona, **JPA** para persistência de dados e **Swagger** para documentação da API. O sistema é modular e fácil de testar, com endpoints bem definidos e documentação disponível via Swagger.
+Este é um microserviço desenvolvido para gestão de pedidos, utilizando o **Spring Framework**. Ele faz integração com **RabbitMQ** para comunicação assíncrona, **JPA** para persistência de dados e **Swagger** para documentação da API. O sistema é modular e fácil de testar, com endpoints bem definidos e documentação disponível via Swagger. E conta com cobertura de testes unitarios com Mockito.
 
 ## Tecnologias Utilizadas
 
