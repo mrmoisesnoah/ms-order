@@ -4,6 +4,8 @@
 
 Este é um microserviço desenvolvido para gestão de pedidos, utilizando o **Spring Framework**. Ele faz integração com **RabbitMQ** para comunicação assíncrona, **JPA** para persistência de dados e **Swagger** para documentação da API. O sistema é modular e fácil de testar, com endpoints bem definidos e documentação disponível via Swagger. E conta com cobertura de testes unitarios com Mockito.
 
+### OBSERVAÇÃO: Infelizmente enfretei dificuldades dado aos procedimentos de segurança para instalação de softwares utilizando o computador corporativo(dado que estou sem computador pessoal). Aos que irão avaliar, informo que precisei utilizar o H2 devido ao prazo de entrega, e as dificuldades que enfrentei para instação e configuração do ambiente de desenvolvimento - isso inclui instalação do MySQL ou PostgreSQL, que foram os bancos que considerava mais apropriado aos parametros do teste.  
+
 ## Tecnologias Utilizadas
 
 - **Spring Boot**: Framework principal para a construção da aplicação.
