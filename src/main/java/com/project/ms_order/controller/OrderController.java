@@ -7,6 +7,8 @@ import com.project.ms_order.model.dto.OrderDTO;
 import com.project.ms_order.model.dto.PageDTO;
 import com.project.ms_order.service.OrderService;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController implements OrderControllerDoc {
 
-    @Autowired
-    private OrderService service;
+    private final OrderService service;
 
     @GetMapping
     public PageDTO<OrderDTO> listPaginated(
