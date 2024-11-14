@@ -12,7 +12,7 @@ Este é um microserviço desenvolvido para gestão de pedidos, utilizando o **Sp
 - **Spring Data JPA**: Para persistência de dados no banco de dados.
 - **Spring AMQP**: Para integração com RabbitMQ.
 - **Swagger**: Para documentação da API.
-- **H2 Database**: Banco de dados em memória para desenvolvimento.
+- **H2 Database**: (NÃO FOI POSSIVEL FAZER A INSTALAÇÃO DOS BANCOS QUE CONSIDEREI MAIS CORRETOS PARA ESSA SOLUÇÃO) Banco de dados em memória para desenvolvimento.
 - **JUnit & Mockito**: Para testes unitários.
 - **RabbitMQ**: Para comunicação assíncrona entre os serviços.
 - **Java 17**: Versão do JDK utilizada.
